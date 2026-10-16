@@ -1,0 +1,612 @@
+{
+  "manifest_version": 1,
+  "type": "device",
+  "name": "Flume",
+  "description": {
+    "en": "Water usage, flow and leak alerts from your Flume smart water monitor.",
+    "fr": "Consommation, débit et alertes de fuite de votre compteur d'eau connecté Flume.",
+    "de": "Wasserverbrauch, Durchfluss und Leckalarme deines Flume-Wasserzählers.",
+    "es": "Consumo, caudal y alertas de fuga de su monitor de agua inteligente Flume."
+  },
+  "version": "1.0.0",
+  "docker_image": "ghcr.io/prohand/gladys-flume:1.0.0",
+  "gladys_version": ">=5.1.0",
+  "cover_image": "https://raw.githubusercontent.com/prohand/gladys-flume/main/cover.png",
+  "categories": ["energy", "security"],
+  "transports": ["cloud"],
+  "config_schema": [
+    {
+      "key": "intro",
+      "type": "section",
+      "label": {
+        "en": "Getting started",
+        "fr": "Pour commencer",
+        "de": "Erste Schritte",
+        "es": "Primeros pasos"
+      },
+      "description": {
+        "en": "Flume only answers through its cloud: the integration needs your Flume account and the personal API client of that account. Create the client on portal.flumewater.com (Settings, API Access) and copy its client ID and client secret below.",
+        "fr": "Flume ne répond que par son cloud : l'intégration a besoin de votre compte Flume et du client API personnel de ce compte. Créez le client sur portal.flumewater.com (Settings, API Access) et copiez ci-dessous son client ID et son client secret.",
+        "de": "Flume antwortet nur über seine Cloud: Die Integration braucht dein Flume-Konto und den persönlichen API-Client dieses Kontos. Erstelle den Client auf portal.flumewater.com (Settings, API Access) und kopiere seine Client-ID und sein Client-Secret unten hinein.",
+        "es": "Flume solo responde a través de su nube: la integración necesita su cuenta de Flume y el cliente API personal de esa cuenta. Cree el cliente en portal.flumewater.com (Settings, API Access) y copie abajo su client ID y su client secret."
+      },
+      "links": [
+        {
+          "url": "https://portal.flumewater.com/settings",
+          "label": {
+            "en": "Flume API access",
+            "fr": "Accès API Flume",
+            "de": "Flume-API-Zugang",
+            "es": "Acceso API de Flume"
+          }
+        },
+        {
+          "url": "https://github.com/prohand/gladys-flume/blob/main/docs/en.md",
+          "label": {
+            "en": "Integration documentation",
+            "fr": "Documentation de l'intégration",
+            "de": "Dokumentation der Integration",
+            "es": "Documentación de la integración"
+          }
+        }
+      ]
+    },
+    {
+      "key": "username",
+      "type": "string",
+      "label": {
+        "en": "Flume e-mail",
+        "fr": "E-mail Flume",
+        "de": "Flume-E-Mail",
+        "es": "Correo de Flume"
+      },
+      "description": {
+        "en": "The e-mail you sign in to the Flume app with.",
+        "fr": "L'e-mail avec lequel vous vous connectez à l'application Flume.",
+        "de": "Die E-Mail, mit der du dich in der Flume-App anmeldest.",
+        "es": "El correo con el que inicia sesión en la app Flume."
+      },
+      "placeholder": {
+        "en": "you@example.com",
+        "fr": "vous@exemple.fr",
+        "de": "du@beispiel.de",
+        "es": "usted@ejemplo.es"
+      },
+      "required": true
+    },
+    {
+      "key": "password",
+      "type": "secret",
+      "label": {
+        "en": "Flume password",
+        "fr": "Mot de passe Flume",
+        "de": "Flume-Passwort",
+        "es": "Contraseña de Flume"
+      },
+      "description": {
+        "en": "The password of that Flume account. It is only sent to Flume.",
+        "fr": "Le mot de passe de ce compte Flume. Il n'est envoyé qu'à Flume.",
+        "de": "Das Passwort dieses Flume-Kontos. Es wird nur an Flume gesendet.",
+        "es": "La contraseña de esa cuenta de Flume. Solo se envía a Flume."
+      },
+      "required": true
+    },
+    {
+      "key": "client_id",
+      "type": "string",
+      "label": {
+        "en": "Client ID",
+        "fr": "Client ID",
+        "de": "Client-ID",
+        "es": "Client ID"
+      },
+      "description": {
+        "en": "Client ID of your API client (portal.flumewater.com, Settings, API Access).",
+        "fr": "Client ID de votre client API (portal.flumewater.com, Settings, API Access).",
+        "de": "Client-ID deines API-Clients (portal.flumewater.com, Settings, API Access).",
+        "es": "Client ID de su cliente API (portal.flumewater.com, Settings, API Access)."
+      },
+      "placeholder": {
+        "en": "ABCDEF1234567890",
+        "fr": "ABCDEF1234567890",
+        "de": "ABCDEF1234567890",
+        "es": "ABCDEF1234567890"
+      },
+      "required": true
+    },
+    {
+      "key": "client_secret",
+      "type": "secret",
+      "label": {
+        "en": "Client secret",
+        "fr": "Client secret",
+        "de": "Client-Secret",
+        "es": "Client secret"
+      },
+      "description": {
+        "en": "Client secret of the same API client.",
+        "fr": "Client secret du même client API.",
+        "de": "Client-Secret desselben API-Clients.",
+        "es": "Client secret del mismo cliente API."
+      },
+      "required": true
+    },
+    {
+      "key": "poll_frequency",
+      "type": "number",
+      "label": {
+        "en": "Refresh interval (s)",
+        "fr": "Intervalle de rafraîchissement (s)",
+        "de": "Aktualisierungsintervall (s)",
+        "es": "Intervalo de actualización (s)"
+      },
+      "description": {
+        "en": "How often the water usage is read, in seconds (60 to 3600). Flume allows about 120 requests per hour: each refresh costs one request per sensor, plus the device list and the alerts every 5 minutes.",
+        "fr": "Fréquence de lecture de la consommation, en secondes (60 à 3600). Flume autorise environ 120 requêtes par heure : chaque rafraîchissement coûte une requête par capteur, plus la liste des appareils et les alertes toutes les 5 minutes.",
+        "de": "Wie oft der Wasserverbrauch gelesen wird, in Sekunden (60 bis 3600). Flume erlaubt etwa 120 Anfragen pro Stunde: Jede Aktualisierung kostet eine Anfrage pro Sensor, dazu die Geräteliste und die Alarme alle 5 Minuten.",
+        "es": "Frecuencia de lectura del consumo, en segundos (60 a 3600). Flume permite unas 120 peticiones por hora: cada actualización cuesta una petición por sensor, más la lista de dispositivos y las alertas cada 5 minutos."
+      },
+      "required": false,
+      "default": 120,
+      "min": 60,
+      "max": 3600
+    },
+    {
+      "key": "flow_threshold",
+      "type": "number",
+      "label": {
+        "en": "Running water threshold (L/min)",
+        "fr": "Seuil d'eau qui coule (L/min)",
+        "de": "Schwelle für fließendes Wasser (L/min)",
+        "es": "Umbral de agua corriendo (L/min)"
+      },
+      "description": {
+        "en": "Litres used in the last minute from which the water counts as running, for the \"Water starts or stops running\" trigger. 0 counts any drop.",
+        "fr": "Litres consommés dans la dernière minute à partir desquels l'eau est considérée comme coulant, pour le déclencheur « L'eau commence ou arrête de couler ». 0 compte la moindre goutte.",
+        "de": "Liter in der letzten Minute, ab denen das Wasser als fließend gilt, für den Auslöser „Wasser beginnt oder hört auf zu fließen“. 0 zählt jeden Tropfen.",
+        "es": "Litros usados en el último minuto a partir de los cuales el agua se considera corriendo, para el disparador «El agua empieza o deja de correr». 0 cuenta cualquier gota."
+      },
+      "required": false,
+      "default": 0.5,
+      "min": 0,
+      "max": 100
+    }
+  ],
+  "actions": [
+    {
+      "key": "test_connection",
+      "label": {
+        "en": "Test the connection",
+        "fr": "Tester la connexion",
+        "de": "Verbindung testen",
+        "es": "Probar la conexión"
+      },
+      "timeout_seconds": 30
+    }
+  ],
+  "scene_triggers": [
+    {
+      "key": "alert_received",
+      "label": {
+        "en": "A Flume alert is raised",
+        "fr": "Une alerte Flume est levée",
+        "de": "Ein Flume-Alarm wird ausgelöst",
+        "es": "Se emite una alerta de Flume"
+      },
+      "description": {
+        "en": "Flume raised a new alert: smart leak, high flow, low battery or bridge offline.",
+        "fr": "Flume a levé une nouvelle alerte : fuite, débit élevé, pile faible ou pont hors ligne.",
+        "de": "Flume hat einen neuen Alarm ausgelöst: Leck, hoher Durchfluss, schwache Batterie oder Bridge offline.",
+        "es": "Flume ha emitido una nueva alerta: fuga, caudal alto, pilas bajas o puente desconectado."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Flume sensor",
+            "fr": "Capteur Flume",
+            "de": "Flume-Sensor",
+            "es": "Sensor Flume"
+          },
+          "required": false
+        },
+        {
+          "key": "alert",
+          "type": "multi_select",
+          "label": {
+            "en": "Alert",
+            "fr": "Alerte",
+            "de": "Alarm",
+            "es": "Alerta"
+          },
+          "options": [
+            {
+              "value": "leak",
+              "label": {
+                "en": "Leak",
+                "fr": "Fuite",
+                "de": "Leck",
+                "es": "Fuga"
+              }
+            },
+            {
+              "value": "high_flow",
+              "label": {
+                "en": "High flow",
+                "fr": "Débit élevé",
+                "de": "Hoher Durchfluss",
+                "es": "Caudal alto"
+              }
+            },
+            {
+              "value": "low_battery",
+              "label": {
+                "en": "Low battery",
+                "fr": "Pile faible",
+                "de": "Schwache Batterie",
+                "es": "Pilas bajas"
+              }
+            },
+            {
+              "value": "bridge_offline",
+              "label": {
+                "en": "Bridge offline",
+                "fr": "Pont hors ligne",
+                "de": "Bridge offline",
+                "es": "Puente desconectado"
+              }
+            },
+            {
+              "value": "other",
+              "label": {
+                "en": "Other alert",
+                "fr": "Autre alerte",
+                "de": "Anderer Alarm",
+                "es": "Otra alerta"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "alert",
+          "type": "string",
+          "label": {
+            "en": "Alert kind",
+            "fr": "Type d'alerte",
+            "de": "Alarmart",
+            "es": "Tipo de alerta"
+          }
+        },
+        {
+          "key": "title",
+          "type": "string",
+          "label": {
+            "en": "Alert title",
+            "fr": "Titre de l'alerte",
+            "de": "Alarmtitel",
+            "es": "Título de la alerta"
+          }
+        },
+        {
+          "key": "message",
+          "type": "string",
+          "label": {
+            "en": "Alert message",
+            "fr": "Message de l'alerte",
+            "de": "Alarmnachricht",
+            "es": "Mensaje de la alerta"
+          }
+        }
+      ]
+    },
+    {
+      "key": "water_flow_changed",
+      "label": {
+        "en": "Water starts or stops running",
+        "fr": "L'eau commence ou arrête de couler",
+        "de": "Wasser beginnt oder hört auf zu fließen",
+        "es": "El agua empieza o deja de correr"
+      },
+      "description": {
+        "en": "The litres of the last minute crossed the running water threshold of the configuration.",
+        "fr": "Les litres de la dernière minute ont franchi le seuil d'eau qui coule de la configuration.",
+        "de": "Die Liter der letzten Minute haben die Schwelle für fließendes Wasser der Konfiguration überschritten.",
+        "es": "Los litros del último minuto han cruzado el umbral de agua corriendo de la configuración."
+      },
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Flume sensor",
+            "fr": "Capteur Flume",
+            "de": "Flume-Sensor",
+            "es": "Sensor Flume"
+          },
+          "required": false
+        },
+        {
+          "key": "state",
+          "type": "multi_select",
+          "label": {
+            "en": "Water",
+            "fr": "Eau",
+            "de": "Wasser",
+            "es": "Agua"
+          },
+          "options": [
+            {
+              "value": "started",
+              "label": {
+                "en": "Starts running",
+                "fr": "Commence à couler",
+                "de": "Beginnt zu fließen",
+                "es": "Empieza a correr"
+              }
+            },
+            {
+              "value": "stopped",
+              "label": {
+                "en": "Stops running",
+                "fr": "Arrête de couler",
+                "de": "Hört auf zu fließen",
+                "es": "Deja de correr"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "state",
+          "type": "string",
+          "label": {
+            "en": "Water state",
+            "fr": "État de l'eau",
+            "de": "Wasserzustand",
+            "es": "Estado del agua"
+          }
+        },
+        {
+          "key": "liters",
+          "type": "number",
+          "label": {
+            "en": "Litres in the last minute",
+            "fr": "Litres de la dernière minute",
+            "de": "Liter der letzten Minute",
+            "es": "Litros del último minuto"
+          }
+        }
+      ]
+    }
+  ],
+  "scene_actions": [
+    {
+      "key": "get_usage",
+      "label": {
+        "en": "Read the Flume water usage",
+        "fr": "Lire la consommation d'eau Flume",
+        "de": "Flume-Wasserverbrauch lesen",
+        "es": "Leer el consumo de agua de Flume"
+      },
+      "description": {
+        "en": "Reads from Flume the litres used over a period, for the next actions of the scene.",
+        "fr": "Lit chez Flume les litres consommés sur une période, pour les actions suivantes de la scène.",
+        "de": "Liest bei Flume die über einen Zeitraum verbrauchten Liter, für die nächsten Aktionen der Szene.",
+        "es": "Lee en Flume los litros usados en un periodo, para las siguientes acciones de la escena."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Flume sensor",
+            "fr": "Capteur Flume",
+            "de": "Flume-Sensor",
+            "es": "Sensor Flume"
+          },
+          "required": true
+        },
+        {
+          "key": "period",
+          "type": "select",
+          "label": {
+            "en": "Period",
+            "fr": "Période",
+            "de": "Zeitraum",
+            "es": "Periodo"
+          },
+          "required": false,
+          "default": "today",
+          "options": [
+            {
+              "value": "last_hour",
+              "label": {
+                "en": "Last hour",
+                "fr": "Dernière heure",
+                "de": "Letzte Stunde",
+                "es": "Última hora"
+              }
+            },
+            {
+              "value": "today",
+              "label": {
+                "en": "Today",
+                "fr": "Aujourd'hui",
+                "de": "Heute",
+                "es": "Hoy"
+              }
+            },
+            {
+              "value": "last_24_hours",
+              "label": {
+                "en": "Last 24 hours",
+                "fr": "Dernières 24 heures",
+                "de": "Letzte 24 Stunden",
+                "es": "Últimas 24 horas"
+              }
+            },
+            {
+              "value": "this_week",
+              "label": {
+                "en": "This week",
+                "fr": "Cette semaine",
+                "de": "Diese Woche",
+                "es": "Esta semana"
+              }
+            },
+            {
+              "value": "this_month",
+              "label": {
+                "en": "This month",
+                "fr": "Ce mois-ci",
+                "de": "Diesen Monat",
+                "es": "Este mes"
+              }
+            }
+          ]
+        }
+      ],
+      "outputs": [
+        {
+          "key": "liters",
+          "type": "number",
+          "label": {
+            "en": "Litres",
+            "fr": "Litres",
+            "de": "Liter",
+            "es": "Litros"
+          }
+        },
+        {
+          "key": "cubic_meters",
+          "type": "number",
+          "label": {
+            "en": "Cubic metres",
+            "fr": "Mètres cubes",
+            "de": "Kubikmeter",
+            "es": "Metros cúbicos"
+          }
+        }
+      ]
+    },
+    {
+      "key": "refresh_now",
+      "label": {
+        "en": "Refresh Flume now",
+        "fr": "Actualiser Flume maintenant",
+        "de": "Flume jetzt aktualisieren",
+        "es": "Actualizar Flume ahora"
+      },
+      "description": {
+        "en": "Reads Flume right away (usage, leak, alerts) instead of waiting for the next refresh.",
+        "fr": "Lit Flume tout de suite (consommation, fuite, alertes) sans attendre le prochain rafraîchissement.",
+        "de": "Liest Flume sofort (Verbrauch, Leck, Alarme), statt auf die nächste Aktualisierung zu warten.",
+        "es": "Lee Flume de inmediato (consumo, fuga, alertas) sin esperar a la próxima actualización."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Flume sensor",
+            "fr": "Capteur Flume",
+            "de": "Flume-Sensor",
+            "es": "Sensor Flume"
+          },
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "key": "leak",
+          "type": "boolean",
+          "label": {
+            "en": "Leak detected",
+            "fr": "Fuite détectée",
+            "de": "Leck erkannt",
+            "es": "Fuga detectada"
+          }
+        },
+        {
+          "key": "water_running",
+          "type": "boolean",
+          "label": {
+            "en": "Water running",
+            "fr": "L'eau coule",
+            "de": "Wasser fließt",
+            "es": "Agua corriendo"
+          }
+        },
+        {
+          "key": "liters_last_minute",
+          "type": "number",
+          "label": {
+            "en": "Litres in the last minute",
+            "fr": "Litres de la dernière minute",
+            "de": "Liter der letzten Minute",
+            "es": "Litros del último minuto"
+          }
+        },
+        {
+          "key": "liters_today",
+          "type": "number",
+          "label": {
+            "en": "Litres today",
+            "fr": "Litres aujourd'hui",
+            "de": "Liter heute",
+            "es": "Litros hoy"
+          }
+        }
+      ]
+    }
+  ],
+  "widgets": [
+    {
+      "key": "water",
+      "label": {
+        "en": "Flume water",
+        "fr": "Eau Flume",
+        "de": "Flume-Wasser",
+        "es": "Agua Flume"
+      },
+      "description": {
+        "en": "Live water usage, the flow of the last 24 hours, leak and sensor status.",
+        "fr": "Consommation d'eau en direct, débit des dernières 24 heures, fuite et état du capteur.",
+        "de": "Wasserverbrauch live, Durchfluss der letzten 24 Stunden, Leck und Sensorstatus.",
+        "es": "Consumo de agua en directo, caudal de las últimas 24 horas, fuga y estado del sensor."
+      },
+      "icon": "droplet",
+      "settings": [
+        {
+          "key": "device",
+          "type": "select",
+          "source": "devices",
+          "label": {
+            "en": "Flume sensor",
+            "fr": "Capteur Flume",
+            "de": "Flume-Sensor",
+            "es": "Sensor Flume"
+          },
+          "description": {
+            "en": "Left empty: the first sensor of the account.",
+            "fr": "Laissé vide : le premier capteur du compte.",
+            "de": "Leer gelassen: der erste Sensor des Kontos.",
+            "es": "Si se deja vacío: el primer sensor de la cuenta."
+          },
+          "required": false
+        }
+      ],
+      "action_timeout_seconds": 30
+    }
+  ]
+}
