@@ -6,6 +6,8 @@ All notable changes to this integration are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-10-16
+
 ### Added
 
 - Flume smart water monitor integration, through the Flume cloud API (cloud transport).
@@ -24,4 +26,5 @@ All notable changes to this integration are documented here. The format follows
 - Respect of the Flume request budget (about 120 per hour): configurable refresh, device
   list and alerts every 5 minutes, 10-minute pause on a 429.
 
-[Unreleased]: https://github.com/prohand/gladys-flume/commits/main
+[Unreleased]: https://github.com/prohand/gladys-flume/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/prohand/gladys-flume/releases/tag/v1.0.1
