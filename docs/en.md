@@ -7,6 +7,8 @@ state of the sensor, and can use them in scenes and on the dashboard.
 
 ## Before you start
 
+- **Gladys 5.3.0 or later** is required.
+- Flume is sold in the **United States** only: the integration is listed for that country.
 - Your Flume sensor and bridge must be installed and working in the **Flume app**.
 - Flume has **no local API**: everything goes through the Flume cloud. Gladys needs
   internet access, and the readings arrive with the delay of the Flume cloud (about a

@@ -24,7 +24,8 @@ User documentation: [English](docs/en.md) · [Français](docs/fr.md) ·
 | Dashboard widget     | `water`: live tiles, flow of the last 24 hours, leak / water / battery / connection status, Refresh button.        |
 | Languages            | English, French, German, Spanish (manifest, messages, widget, documentation).                                      |
 
-Requires **Gladys 5.1.0 or later** (scene triggers, scene actions and widgets).
+Requires **Gladys 5.3.0 or later** (catalog keywords and countries; scene triggers, scene actions
+and widgets need 5.1.0).
 
 ## How it reads Flume
 

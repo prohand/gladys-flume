@@ -10,9 +10,18 @@
   },
   "version": "1.0.2",
   "docker_image": "ghcr.io/prohand/gladys-flume:1.0.2",
-  "gladys_version": ">=5.1.0",
+  "gladys_version": ">=5.3.0",
   "cover_image": "https://raw.githubusercontent.com/prohand/gladys-flume/main/cover.png",
   "categories": ["energy", "security"],
+  "keywords": [
+    "flume 2",
+    "flumewater",
+    "water meter",
+    "leak detector",
+    "water consumption",
+    "plumbing"
+  ],
+  "countries": ["US"],
   "transports": ["cloud"],
   "config_schema": [
     {

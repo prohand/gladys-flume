@@ -11,7 +11,7 @@ runs in its own sandboxed Docker container, reads the Flume cloud API
 (`https://api.flumewater.com`, OAuth2 password grant with the user's personal API
 client) and publishes to Gladys: one device per Flume sensor (flow, today, month, leak,
 low battery), the transport badge (`cloud` / `unreachable`), two scene triggers, two
-scene actions and a dashboard widget (Gladys 5.1+). It started from the official
+scene actions and a dashboard widget (Gladys 5.3+). It started from the official
 JavaScript template (GladysAssistant/integration-template-js).
 
 ## Commands
@@ -89,7 +89,8 @@ test/                        node --test, SDK fake Gladys + test/helpers/fakeFlu
   the GitHub Release.
 - **Manifest.** Every text is `{ "en", "fr", "de", "es" }` (`label`, `description`,
   `placeholder`); the catalog `description` holds 10 to 100 characters per language;
-  `widgets`, `scene_triggers`, `scene_actions` need `gladys_version >=5.1.0`.
+  `widgets`, `scene_triggers`, `scene_actions` need `gladys_version >=5.1.0`, `keywords`
+  and `countries` (`["US"]`: Flume only works in the United States) need `>=5.3.0`.
   `test/manifest.test.js` ties the manifest to the code: change both sides together.
 - **User-facing text** is in four languages (English, French, German with the informal
   "du", Spanish with "usted"): action answers, connection status, widget texts (built

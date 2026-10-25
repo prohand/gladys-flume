@@ -7,6 +7,8 @@ Batteriezustand des Sensors und kann sie in Szenen und auf dem Dashboard verwend
 
 ## Bevor du beginnst
 
+- **Gladys 5.3.0 oder neuer** ist erforderlich.
+- Flume wird nur in den **Vereinigten Staaten** verkauft: Die Integration wird für dieses Land angeboten.
 - Dein Flume-Sensor und deine Bridge müssen in der **Flume-App** eingerichtet sein und
   funktionieren.
 - Flume hat **keine lokale API**: Alles läuft über die Flume-Cloud. Gladys braucht
