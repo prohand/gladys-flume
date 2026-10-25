@@ -74,12 +74,70 @@ test('Flume is a cloud integration', () => {
   assert.deepEqual(manifest.transports, ['cloud']);
 });
 
-test('the capability fields and the categories require Gladys >= 5.1.0', () => {
+// The store vocabulary of catalog shelves (Gladys 5.3 added the last four).
+const CATALOG_CATEGORIES = [
+  'climate',
+  'lighting',
+  'energy',
+  'security',
+  'multimedia',
+  'appliances',
+  'environment',
+  'protocols',
+  'network',
+  'notifications',
+  'assistants',
+  'services',
+  'transport',
+  'vehicles',
+  'servers',
+  'leisure',
+];
+
+/** The floor of a ">=x.y.z" range, as numbers. */
+function versionFloor() {
   const match = manifest.gladys_version.match(/^>=\s*(\d+)\.(\d+)\.(\d+)$/);
   assert.ok(match, 'gladys_version must be a ">=x.y.z" range');
-  const [major, minor] = match.slice(1).map(Number);
-  assert.ok(major > 5 || (major === 5 && minor >= 1), manifest.gladys_version);
+  return match.slice(1).map(Number);
+}
+
+function floorAtLeast(major, minor) {
+  const [floorMajor, floorMinor] = versionFloor();
+  return floorMajor > major || (floorMajor === major && floorMinor >= minor);
+}
+
+test('the capability fields and the categories require Gladys >= 5.1.0', () => {
+  assert.ok(floorAtLeast(5, 1), manifest.gladys_version);
   assert.ok(manifest.categories.length >= 1 && manifest.categories.length <= 3);
+  assert.equal(new Set(manifest.categories).size, manifest.categories.length);
+  for (const category of manifest.categories) {
+    assert.ok(CATALOG_CATEGORIES.includes(category), `unknown category "${category}"`);
+  }
+});
+
+test('keywords and countries require Gladys >= 5.3.0', () => {
+  // An older core rejects any manifest field it does not know.
+  if (manifest.keywords || manifest.countries || manifest.music) {
+    assert.ok(floorAtLeast(5, 3), manifest.gladys_version);
+  }
+});
+
+test('the search keywords are 1 to 10 unique strings of 2 to 30 characters', () => {
+  const { keywords } = manifest;
+  assert.ok(Array.isArray(keywords) && keywords.length >= 1 && keywords.length <= 10);
+  const normalized = keywords.map((keyword) => keyword.trim().toLowerCase());
+  assert.equal(new Set(normalized).size, keywords.length, 'keywords must be unique');
+  for (const keyword of normalized) {
+    assert.ok(keyword.length >= 2 && keyword.length <= 30, `keyword "${keyword}"`);
+  }
+});
+
+test('Flume is only sold in the United States', () => {
+  // Flume's own help center: the product only works in the United States.
+  assert.deepEqual(manifest.countries, ['US']);
+  for (const country of manifest.countries) {
+    assert.match(country, /^[A-Z]{2}$/);
+  }
 });
 
 test('every manifest action is registered in index.js', () => {

@@ -7,6 +7,8 @@ el estado de las pilas del sensor, y puede usarlos en escenas y en el panel.
 
 ## Antes de empezar
 
+- Se necesita **Gladys 5.3.0 o posterior**.
+- Flume solo se vende en **Estados Unidos**: la integración se ofrece para ese país.
 - Su sensor y su puente Flume deben estar instalados y funcionando en la **app
   Flume**.
 - Flume **no tiene API local**: todo pasa por la nube de Flume. Gladys necesita

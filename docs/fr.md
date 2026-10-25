@@ -7,6 +7,8 @@ de la pile du capteur, et peut s'en servir dans les scènes et sur le tableau de
 
 ## Avant de commencer
 
+- **Gladys 5.3.0 ou plus récent** est nécessaire.
+- Flume n'est vendu qu'aux **États-Unis** : l'intégration est proposée pour ce pays.
 - Votre capteur et votre pont Flume doivent être installés et fonctionner dans
   l'**application Flume**.
 - Flume n'a **pas d'API locale** : tout passe par le cloud Flume. Gladys a besoin
