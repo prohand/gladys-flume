@@ -8,8 +8,8 @@
     "de": "Wasserverbrauch, Durchfluss und Leckalarme deines Flume-Wasserzählers.",
     "es": "Consumo, caudal y alertas de fuga de su monitor de agua inteligente Flume."
   },
-  "version": "1.0.2",
-  "docker_image": "ghcr.io/prohand/gladys-flume:1.0.2",
+  "version": "1.1.0",
+  "docker_image": "ghcr.io/prohand/gladys-flume:1.1.0",
   "gladys_version": ">=5.3.0",
   "cover_image": "https://raw.githubusercontent.com/prohand/gladys-flume/main/cover.png",
   "categories": ["energy", "security"],
