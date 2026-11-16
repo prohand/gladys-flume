@@ -6,6 +6,10 @@ All notable changes to this integration are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-11-16
+
+- Maintenance release, no functional change.
+
 ## [1.1.0] - 2026-10-25
 
 ### Added
@@ -42,7 +46,8 @@ All notable changes to this integration are documented here. The format follows
 - Respect of the Flume request budget (about 120 per hour): configurable refresh, device
   list and alerts every 5 minutes, 10-minute pause on a 429.
 
-[Unreleased]: https://github.com/prohand/gladys-flume/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/prohand/gladys-flume/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/prohand/gladys-flume/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/prohand/gladys-flume/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/prohand/gladys-flume/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/prohand/gladys-flume/releases/tag/v1.0.1
